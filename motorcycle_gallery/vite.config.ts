@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   base: "/spa_art_gallery/",
   build: {
-    outDir: "docs"
+    outDir: "../docs"
   }
 })
