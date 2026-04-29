@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import bike1 from "./images/bike1.jpg"
 import bike2 from "./images/bike2.jpg"
 import bike3 from "./images/bike3.png"
@@ -56,12 +56,61 @@ function App() {
     }
   ]
 
-  const [activeSection, setActiveSection] = useState("home")
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [likes, setLikes] = useState([0, 0, 0])
-  const [comment, setComment] = useState("")
-  const [comments, setComments] = useState<Comment[]>([])
-  const [commentSort, setCommentSort] = useState("oldest")
+  const [activeSection, setActiveSection] = useState(
+    localStorage.getItem("section") || "home"
+  )
+  const [currentIndex, setCurrentIndex] = useState(
+  Number(localStorage.getItem("currentIndex")) || 0
+)
+
+const [likes, setLikes] = useState<number[]>(
+  JSON.parse(
+    localStorage.getItem("likes") ||
+      JSON.stringify(new Array(bikes.length).fill(0))
+  )
+)
+
+const [comment, setComment] = useState("")
+
+const [comments, setComments] = useState<Comment[]>(
+  JSON.parse(localStorage.getItem("comments") || "[]")
+)
+
+const [commentSort, setCommentSort] = useState(
+  localStorage.getItem("commentSort") || "oldest"
+)
+
+useEffect(() => {
+  localStorage.setItem("section", activeSection)
+}, [activeSection])
+
+useEffect(() => {
+  localStorage.setItem(
+    "currentIndex",
+    currentIndex.toString()
+  )
+}, [currentIndex])
+
+useEffect(() => {
+  localStorage.setItem(
+    "likes",
+    JSON.stringify(likes)
+  )
+}, [likes])
+
+useEffect(() => {
+  localStorage.setItem(
+    "comments",
+    JSON.stringify(comments)
+  )
+}, [comments])
+
+useEffect(() => {
+  localStorage.setItem(
+    "commentSort",
+    commentSort
+  )
+}, [commentSort])
 
   const nextImage = () => {
     setCurrentIndex((prev) =>
@@ -130,6 +179,13 @@ function App() {
 
         <button onClick={() => setActiveSection("comments")}>
           Comments
+        </button>
+        <button onClick={() => {
+          localStorage.clear()
+          window.location.reload()
+          }}
+        >
+          Reset
         </button>
       </nav>
 
